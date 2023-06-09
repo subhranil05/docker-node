@@ -1,0 +1,33 @@
+version: '3'
+services:
+  node-app:
+    build:    # if you want to build docker file together with compose
+      context: .
+      args:
+        NODE_ENV: development
+    # image: subhranil05/express-node-app:0.0.2
+    ports:
+      - "3000:3000"
+      - "4000:4000"
+    # environment:
+    #   - NODE_ENV=development
+    #   - PORT=3000
+    env_file:
+      - ./webapp-dev.env
+    volumes:
+      - ./:/app:ro
+      - /app/node_modules
+    depends_on:
+      - mongodb  
+    command: npm run dev
+
+  mongodb:
+   image: mongo
+   env_file:
+     - ./mongo.env
+   volumes:
+     - ./dbdata:/data/db
+     # - mongo-db:/data/db
+
+volumes:
+  mongo-db:  

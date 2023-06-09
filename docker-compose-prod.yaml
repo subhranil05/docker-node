@@ -1,0 +1,31 @@
+version: '3'
+services:
+  node-app:
+    build:    # if you want to build docker file together with compose
+      context: .
+      args:
+        NODE_ENV: production
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M  
+    ports:
+      - "3000:3000"
+    # environment:
+    #   - NODE_ENV=production
+    #   - PORT=3000
+    env_file:
+      - ./webapp-prod.env
+    depends_on:
+      - mongodb  
+    command: node index.js
+
+  mongodb:
+   image: mongo
+   env_file:
+     - ./mongo.env
+        
